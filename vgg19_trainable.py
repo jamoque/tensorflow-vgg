@@ -18,10 +18,11 @@ class Vgg19:
     :dropout:           see cs.toronto.edu/~hinton/absps/JMLRdropout.pdf
     :num_classes:       number of labels for the output layer of the network
                         Imagenet has 1000 classes
+    :l2_reg:            Regularization constant for modulating L2 loss
     """
 
     def __init__(self, vgg19_npy_path=None, trainable=True,
-                 dropout=0.5, num_classes=1000):
+                 dropout=0.5, num_classes=1000, l2_reg=1e-5):
         if vgg19_npy_path is not None:
             self.data_dict = np.load(vgg19_npy_path, encoding='latin1').item()
         else:
@@ -31,6 +32,7 @@ class Vgg19:
         self.trainable = trainable
         self.dropout = dropout
         self.num_classes = num_classes
+        self.l2_reg = l2_reg
 
     def build(self, rgb, train_mode=None):
         """
@@ -54,6 +56,9 @@ class Vgg19:
             red - VGG_MEAN[2],
         ])
         assert bgr.get_shape().as_list()[1:] == [224, 224, 3]
+
+        # Track the network's regularization loss
+        self.reg_loss = 0.0
 
         self.conv1_1 = self.conv_layer(bgr, 3, 64, "conv1_1")
         self.conv1_2 = self.conv_layer(self.conv1_1, 64, 64, "conv1_2")
@@ -140,6 +145,7 @@ class Vgg19:
             conv = tf.nn.conv2d(bottom, filt, [1, 1, 1, 1], padding='SAME')
             bias = tf.nn.bias_add(conv, conv_biases)
             relu = tf.nn.relu(bias)
+            self.reg_loss += self.l2_reg * tf.nn.l2_loss(filt)
 
             return relu
 
@@ -149,6 +155,7 @@ class Vgg19:
 
             x = tf.reshape(bottom, [-1, in_size])
             fc = tf.nn.bias_add(tf.matmul(x, weights), biases)
+            self.reg_loss += self.l2_reg * tf.nn.l2_loss(weights)
 
             return fc
 
