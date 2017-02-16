@@ -1,4 +1,16 @@
-# Tensorflow VGG16 and VGG19
+# About this fork
+
+This is a fork of <a href="https://github.com/machrisaa/tensorflow-vgg"> that is more configurable and extendable.
+
+VGG well in classifying ImageNet data at ILSVRC 2014, winning runner-up at the competition. However, VGG can be used for many image classification tasks as well as others. To help achieve this, we add `num_classes` as a parameter.
+
+Dropout is an important hyper-parameter that can greatly impact the speed of training. We also include it as a configurable parameter.
+
+---------------------------------------
+
+# From the original repo:
+
+## Tensorflow VGG16 and VGG19
 
 This is a Tensorflow implemention of VGG 16 and VGG 19 based on [tensorflow-vgg16](https://github.com/ry/tensorflow-vgg16) and [Caffe to Tensorflow](https://github.com/ethereon/caffe-tensorflow). Original Caffe implementation can be found in [here](https://gist.github.com/ksimonyan/211839e770f7b538e2d8) and [here](https://gist.github.com/ksimonyan/3785162f95cd2d5fee77).
 
