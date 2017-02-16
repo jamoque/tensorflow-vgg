@@ -1,6 +1,6 @@
 # About this fork
 
-This is a fork of <a href="https://github.com/machrisaa/tensorflow-vgg"> that is more configurable and extendable.
+This is a fork of <a href="https://github.com/machrisaa/tensorflow-vgg">https://github.com/machrisaa/tensorflow-vgg</a> that is more configurable and extendable.
 
 VGG well in classifying ImageNet data at ILSVRC 2014, winning runner-up at the competition. However, VGG can be used for many image classification tasks as well as others. To help achieve this, we add `num_classes` as a parameter.
 
