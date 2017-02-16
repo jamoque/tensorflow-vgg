@@ -11,9 +11,16 @@ VGG_MEAN = [103.939, 116.779, 123.68]
 class Vgg19:
     """
     A trainable version VGG19.
+
+    Args:
+    :vgg19_npy_path:    file path to a pre-trained .npy model file
+    :trainable:         specifies whether or not the network is being trained
+    :dropout:           see cs.toronto.edu/~hinton/absps/JMLRdropout.pdf
+    :num_classes:       number of labels for the output layer of the network
+                        Imagenet has 1000 classes
     """
 
-    def __init__(self, vgg19_npy_path=None, trainable=True, dropout=0.5):
+    def __init__(self, vgg19_npy_path=None, trainable=True, dropout=0.5, num_classes=1000):
         if vgg19_npy_path is not None:
             self.data_dict = np.load(vgg19_npy_path, encoding='latin1').item()
         else:
@@ -22,6 +29,7 @@ class Vgg19:
         self.var_dict = {}
         self.trainable = trainable
         self.dropout = dropout
+        self.num_classes = num_classes
 
     def build(self, rgb, train_mode=None):
         """
@@ -85,7 +93,7 @@ class Vgg19:
         elif self.trainable:
             self.relu7 = tf.nn.dropout(self.relu7, self.dropout)
 
-        self.fc8 = self.fc_layer(self.relu7, 4096, 1000, "fc8")
+        self.fc8 = self.fc_layer(self.relu7, 4096, self.num_classes, "fc8")
 
         self.prob = tf.nn.softmax(self.fc8, name="prob")
 
