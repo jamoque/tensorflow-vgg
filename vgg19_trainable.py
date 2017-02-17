@@ -109,8 +109,12 @@ class Vgg19:
         elif self.trainable:
             self.relu7 = tf.nn.dropout(self.relu7, self.dropout)
 
-        self.fc8 = self.fc_layer(self.relu7, 4096, self.num_classes, "fc8")
-
+        if self.num_classes == 1000:
+            # default (ImageNet)
+            self.fc8 = self.fc_layer(self.relu7, 4096, self.num_classes, "fc8")
+        else:
+            # custom number of classes
+            self.fc8 = self.fc_layer(self.relu7, 4096, self.num_classes, "fc8n")
         self.prob = tf.nn.softmax(self.fc8, name="prob")
 
         self.data_dict = None
